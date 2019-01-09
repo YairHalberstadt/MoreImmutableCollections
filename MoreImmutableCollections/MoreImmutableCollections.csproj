@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <ApplicationIcon />
+    <StartupObject />
+    <LangVersion>7.1</LangVersion>
+    <Version>0.0.1-alpha</Version>
+    <Company>YH</Company>
+    <Authors>Yair Halberstadt</Authors>
+    <Description>Extensions to System.Collections.Immutable to include FastImmutableHashSet and FastImmutableDictionary</Description>
+    <Copyright>MIT</Copyright>
+    <PackageLicenseUrl></PackageLicenseUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
+  </ItemGroup>
+
+</Project>

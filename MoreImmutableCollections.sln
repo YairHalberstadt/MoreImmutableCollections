@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2046
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoreImmutableCollections", "MoreImmutableCollections\MoreImmutableCollections.csproj", "{2B9D4B27-F814-4776-9A08-6F5E80514E26}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoreImmutableCollections.Tests", "MoreImmutableCollections.Tests\MoreImmutableCollections.Tests.csproj", "{5304E8C0-54EE-4122-B23E-A18588E3391D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2B9D4B27-F814-4776-9A08-6F5E80514E26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B9D4B27-F814-4776-9A08-6F5E80514E26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B9D4B27-F814-4776-9A08-6F5E80514E26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B9D4B27-F814-4776-9A08-6F5E80514E26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5304E8C0-54EE-4122-B23E-A18588E3391D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5304E8C0-54EE-4122-B23E-A18588E3391D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5304E8C0-54EE-4122-B23E-A18588E3391D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5304E8C0-54EE-4122-B23E-A18588E3391D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {74933A9A-646F-443C-AA19-0CE766C5BC46}
+	EndGlobalSection
+EndGlobal
