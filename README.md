@@ -15,3 +15,5 @@ https://www.nuget.org/packages/MoreImmutableCollections/0.0.1-alpha
 ```
 Install-Package MoreImmutableCollections -Version 0.0.1-alpha
 ```
+
+Note you will have to check the 'Include Prerelease' checkbox to find the package in the Visual Studio Nuget Package Manager
