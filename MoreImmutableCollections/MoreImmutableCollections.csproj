@@ -6,7 +6,7 @@
     <ApplicationIcon />
     <StartupObject />
     <LangVersion>7.1</LangVersion>
-    <Version>0.0.2-alpha</Version>
+    <Version>0.0.3-alpha</Version>
     <Company>YH</Company>
     <Authors>Yair Halberstadt</Authors>
     <Description>Extensions to System.Collections.Immutable to include FastImmutableHashSet and FastImmutableDictionary</Description>

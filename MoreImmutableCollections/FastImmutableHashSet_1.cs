@@ -47,7 +47,7 @@ namespace System.Collections.Immutable
 		/// <returns><c>true</c> if the values' underlying hashSets are reference equal; <c>false</c> otherwise.</returns>
 		public static bool operator ==(FastImmutableHashSet<T> left, FastImmutableHashSet<T> right)
 		{
-			return left.Equals(right);
+			return left?.Equals(right) ?? right is null;
 		}
 
 		/// <summary>
@@ -58,7 +58,7 @@ namespace System.Collections.Immutable
 		/// <returns><c>true</c> if the values' underlying hashSets are reference not equal; <c>false</c> otherwise.</returns>
 		public static bool operator !=(FastImmutableHashSet<T> left, FastImmutableHashSet<T> right)
 		{
-			return !left.Equals(right);
+			return !(left == right);
 		}
 
 		#endregion
@@ -147,7 +147,7 @@ namespace System.Collections.Immutable
 		[Pure]
 		public bool Equals(FastImmutableHashSet<T> other)
 		{
-			return this.hashSet == other.hashSet;
+			return this.hashSet == other?.hashSet;
 		}
 
 		/// <summary>

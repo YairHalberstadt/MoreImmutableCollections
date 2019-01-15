@@ -50,7 +50,7 @@ namespace MoreImmutableCollections
 		/// <returns><c>true</c> if the values' underlying dictionaries are reference equal; <c>false</c> otherwise.</returns>
 		public static bool operator ==(FastImmutableDictionary<TKey, TValue> left, FastImmutableDictionary<TKey, TValue> right)
 		{
-			return left.Equals(right);
+			return left?.Equals(right) ?? right is null;
 		}
 
 		/// <summary>
@@ -61,7 +61,7 @@ namespace MoreImmutableCollections
 		/// <returns><c>true</c> if the values' underlying dictionaries are reference not equal; <c>false</c> otherwise.</returns>
 		public static bool operator !=(FastImmutableDictionary<TKey, TValue> left, FastImmutableDictionary<TKey, TValue> right)
 		{
-			return !left.Equals(right);
+			return !(left == right);
 		}
 
 		#endregion
@@ -177,7 +177,7 @@ namespace MoreImmutableCollections
 		[Pure]
 		public bool Equals(FastImmutableDictionary<TKey, TValue> other)
 		{
-			return this.dictionary == other.dictionary;
+			return this.dictionary == other?.dictionary;
 		}
 
 		[Pure]
