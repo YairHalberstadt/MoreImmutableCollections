@@ -11,7 +11,7 @@ namespace System.Collections.Immutable
 	/// </summary>
 	/// <typeparam name="T">The type of elements in the set.</typeparam>
 	[DebuggerDisplay("Count = {" + nameof(Count) + "}")]
-	public struct FastImmutableHashSet<T> : ISet<T>, IEquatable<FastImmutableHashSet<T>>
+	public class FastImmutableHashSet<T> : ISet<T>, IEquatable<FastImmutableHashSet<T>>
 	{
 		/// <summary>
 		///  An empty (initialized) instance of <see cref="FastImmutableHashSet{T}"/>.
@@ -25,16 +25,16 @@ namespace System.Collections.Immutable
 		/// This would be private, but we make it internal so that our own extension methods can access it.
 		/// </remarks>
 		[DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
-		internal HashSet<T> hashSet;
+		internal readonly HashSet<T> hashSet;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="FastImmutableHashSet{T}"/> struct
 		/// *without making a defensive copy*.
 		/// </summary>
-		/// <param name="items">The hashset to use. May be null for "default" hashSets.</param>
+		/// <param name="items">The hashset to use. Not null.</param>
 		internal FastImmutableHashSet(HashSet<T> items)
 		{
-			this.hashSet = items;
+			this.hashSet = items ?? throw new ArgumentNullException(nameof(items));
 		}
 
 		#region Operators
@@ -61,28 +61,6 @@ namespace System.Collections.Immutable
 			return !left.Equals(right);
 		}
 
-		/// <summary>
-		/// Checks equality between two instances.
-		/// </summary>
-		/// <param name="left">The instance to the left of the operator.</param>
-		/// <param name="right">The instance to the right of the operator.</param>
-		/// <returns><c>true</c> if the values' underlying hashSets are reference equal; <c>false</c> otherwise.</returns>
-		public static bool operator ==(FastImmutableHashSet<T>? left, FastImmutableHashSet<T>? right)
-		{
-			return left.GetValueOrDefault().Equals(right.GetValueOrDefault());
-		}
-
-		/// <summary>
-		/// Checks inequality between two instances.
-		/// </summary>
-		/// <param name="left">The instance to the left of the operator.</param>
-		/// <param name="right">The instance to the right of the operator.</param>
-		/// <returns><c>true</c> if the values' underlying hashSets are reference not equal; <c>false</c> otherwise.</returns>
-		public static bool operator !=(FastImmutableHashSet<T>? left, FastImmutableHashSet<T>? right)
-		{
-			return !left.GetValueOrDefault().Equals(right.GetValueOrDefault());
-		}
-
 		#endregion
 
 		/// <summary>
@@ -99,28 +77,6 @@ namespace System.Collections.Immutable
 		public bool IsEmpty
 		{
 			get { return this.Count == 0; }
-		}
-
-		/// <summary>
-		/// Gets a value indicating whether this struct was initialized without an actual hashset instance.
-		/// </summary>
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		public bool IsDefault
-		{
-			get { return this.hashSet == null; }
-		}
-
-		/// <summary>
-		/// Gets a value indicating whether this struct is empty or uninitialized.
-		/// </summary>
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		public bool IsDefaultOrEmpty
-		{
-			get
-			{
-				var self = this;
-				return self.hashSet == null || self.Count == 0;
-			}
 		}
 
 		/// <summary>
@@ -148,9 +104,7 @@ namespace System.Collections.Immutable
 		[Pure]
 		public HashSet<T>.Enumerator GetEnumerator()
 		{
-			var self = this;
-			self.ThrowNullRefIfNotInitialized();
-			return self.hashSet.GetEnumerator();
+			return hashSet.GetEnumerator();
 		}
 
 		/// <summary>
@@ -162,8 +116,7 @@ namespace System.Collections.Immutable
 		[Pure]
 		public override int GetHashCode()
 		{
-			var self = this;
-			return self.hashSet == null ? 0 : self.hashSet.GetHashCode();
+			return hashSet.GetHashCode();
 		}
 
 		/// <summary>
@@ -201,7 +154,6 @@ namespace System.Collections.Immutable
 		/// Returns an enumerator for the contents of the hashSet.
 		/// </summary>
 		/// <returns>An enumerator.</returns>
-		/// <exception cref="InvalidOperationException">Thrown if the <see cref="IsDefault"/> property returns true.</exception>
 		[Pure]
 		IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator();
 
@@ -212,38 +164,7 @@ namespace System.Collections.Immutable
 		/// <exception cref="InvalidOperationException">Thrown if the <see cref="IsDefault"/> property returns true.</exception>
 		[Pure]
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-		/// <summary>
-		/// Throws a null reference exception if the hashSet field is null.
-		/// </summary>
-		internal void ThrowNullRefIfNotInitialized()
-		{
-			// Force NullReferenceException if hashSet is null by touching its Length.
-			// This way of checking has a nice property of requiring very little code
-			// and not having any conditions/branches.
-			// In a faulting scenario we are relying on hardware to generate the fault.
-			// And in the non-faulting scenario (most common) the check is virtually free since
-			// if we are going to do anything with the hashSet, we will need Length anyways
-			// so touching it, and potentially causing a cache miss, is not going to be an
-			// extra expense.
-			var unused = this.hashSet.Count;
-		}
-
-		/// <summary>
-		/// Throws an <see cref="InvalidOperationException"/> if the <see cref="hashSet"/> field is null, i.e. the
-		/// <see cref="IsDefault"/> property returns true.  The
-		/// <see cref="InvalidOperationException"/> message specifies that the operation cannot be performed
-		/// on a default instance of <see cref="ImmutablehashSet{T}"/>.
-		///
-		/// This is intended for explicitly implemented interface method and property implementations.
-		/// </summary>
-		private void ThrowInvalidOperationIfNotInitialized()
-		{
-			if (this.IsDefault)
-			{
-				throw new InvalidOperationException(@"This operation cannot be performed on a default instance of FastImmutableHashSet<T>.  Consider initializing the array, or checking the FastImmutableHashSet<T>.IsDefault property.");
-			}
-		}
+		
 
 		public bool Contains(T value)
 		{

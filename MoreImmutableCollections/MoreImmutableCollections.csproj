@@ -6,12 +6,20 @@
     <ApplicationIcon />
     <StartupObject />
     <LangVersion>7.1</LangVersion>
-    <Version>0.0.1-alpha</Version>
+    <Version>0.0.2-alpha</Version>
     <Company>YH</Company>
     <Authors>Yair Halberstadt</Authors>
     <Description>Extensions to System.Collections.Immutable to include FastImmutableHashSet and FastImmutableDictionary</Description>
     <Copyright>MIT</Copyright>
-    <PackageLicenseUrl></PackageLicenseUrl>
+    <PackageLicenseUrl>https://github.com/YairHalberstadt/MoreImmutableCollections/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/YairHalberstadt/MoreImmutableCollections</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/YairHalberstadt/MoreImmutableCollections</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <PackageTags>ImmutableCollections, Collections</PackageTags>
+    <PackageReleaseNotes>This code was implemented very quickly, as I needed it for a project I was using. As such I only tested the functionality I was actually intending to use!
+
+Use at your own risk!</PackageReleaseNotes>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>

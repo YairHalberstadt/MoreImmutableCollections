@@ -243,9 +243,6 @@ namespace MoreImmutableCollections
 		[Pure]
 		public static TValue GetValueOrDefault<TKey, TValue>(this FastImmutableDictionary<TKey, TValue> dictionary, TKey key, TValue defaultValue)
 		{
-			if (dictionary.IsDefault)
-				throw new ArgumentNullException(nameof(dictionary));
-
 			if (dictionary.TryGetValue(key, out var value))
 			{
 				return value;

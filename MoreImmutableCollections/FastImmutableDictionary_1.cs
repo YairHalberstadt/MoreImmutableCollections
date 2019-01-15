@@ -14,7 +14,7 @@ namespace MoreImmutableCollections
 	/// </summary>
 	/// <typeparam name="TKey"></typeparam>
 	/// <typeparam name="TValue"></typeparam>
-	public struct FastImmutableDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>, IDictionary<TKey, TValue>,  IDictionary
+	public class FastImmutableDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>, IDictionary<TKey, TValue>,  IDictionary
 	{
 		/// <summary>
 		///  An empty (initialized) instance of <see cref="FastImmutableDictionary{TKey, TValue}"/>.
@@ -34,10 +34,10 @@ namespace MoreImmutableCollections
 		/// Initializes a new instance of the <see cref="FastImmutableDictionary{TKey, TValue}"/> struct
 		/// *without making a defensive copy*.
 		/// </summary>
-		/// <param name="items">The hashset to use. May be null for "default" dictionaries.</param>
+		/// <param name="items">The hashset to use. Not null.</param>
 		internal FastImmutableDictionary(Dictionary<TKey, TValue> items)
 		{
-			this.dictionary = items;
+			this.dictionary = items ?? throw new ArgumentNullException(nameof(dictionary));
 		}
 
 		#region Operators
@@ -64,28 +64,6 @@ namespace MoreImmutableCollections
 			return !left.Equals(right);
 		}
 
-		/// <summary>
-		/// Checks equality between two instances.
-		/// </summary>
-		/// <param name="left">The instance to the left of the operator.</param>
-		/// <param name="right">The instance to the right of the operator.</param>
-		/// <returns><c>true</c> if the values' underlying dictionaries are reference equal; <c>false</c> otherwise.</returns>
-		public static bool operator ==(FastImmutableDictionary<TKey, TValue>? left, FastImmutableDictionary<TKey, TValue>? right)
-		{
-			return left.GetValueOrDefault().Equals(right.GetValueOrDefault());
-		}
-
-		/// <summary>
-		/// Checks inequality between two instances.
-		/// </summary>
-		/// <param name="left">The instance to the left of the operator.</param>
-		/// <param name="right">The instance to the right of the operator.</param>
-		/// <returns><c>true</c> if the values' underlying dictionaries are reference not equal; <c>false</c> otherwise.</returns>
-		public static bool operator !=(FastImmutableDictionary<TKey, TValue>? left, FastImmutableDictionary<TKey, TValue>? right)
-		{
-			return !left.GetValueOrDefault().Equals(right.GetValueOrDefault());
-		}
-
 		#endregion
 
 
@@ -103,28 +81,6 @@ namespace MoreImmutableCollections
 		public bool IsEmpty
 		{
 			get { return this.Count == 0; }
-		}
-
-		/// <summary>
-		/// Gets a value indicating whether this struct was initialized without an actual hashset instance.
-		/// </summary>
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		public bool IsDefault
-		{
-			get { return this.dictionary == null; }
-		}
-
-		/// <summary>
-		/// Gets a value indicating whether this struct is empty or uninitialized.
-		/// </summary>
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		public bool IsDefaultOrEmpty
-		{
-			get
-			{
-				var self = this;
-				return self.dictionary == null || self.Count == 0;
-			}
 		}
 
 		public IEnumerable<TKey> Keys => dictionary.Keys;
@@ -179,7 +135,6 @@ namespace MoreImmutableCollections
 		public Dictionary<TKey, TValue>.Enumerator GetEnumerator()
 		{
 			var self = this;
-			self.ThrowNullRefIfNotInitialized();
 			return self.dictionary.GetEnumerator();
 		}
 
@@ -192,8 +147,7 @@ namespace MoreImmutableCollections
 		[Pure]
 		public override int GetHashCode()
 		{
-			var self = this;
-			return self.dictionary == null ? 0 : self.dictionary.GetHashCode();
+			return dictionary.GetHashCode();
 		}
 
 		/// <summary>
@@ -233,7 +187,6 @@ namespace MoreImmutableCollections
 		/// Returns an enumerator for the contents of the dictionary.
 		/// </summary>
 		/// <returns>An enumerator.</returns>
-		/// <exception cref="InvalidOperationException">Thrown if the <see cref="IsDefault"/> property returns true.</exception>
 		[Pure]
 		IEnumerator<KeyValuePair<TKey, TValue>> IEnumerable<KeyValuePair<TKey, TValue>>.GetEnumerator() => GetEnumerator();
 
@@ -241,41 +194,8 @@ namespace MoreImmutableCollections
 		/// Returns an enumerator for the contents of the dictionary.
 		/// </summary>
 		/// <returns>An enumerator.</returns>
-		/// <exception cref="InvalidOperationException">Thrown if the <see cref="IsDefault"/> property returns true.</exception>
 		[Pure]
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-		/// <summary>
-		/// Throws a null reference exception if the dictionary field is null.
-		/// </summary>
-		internal void ThrowNullRefIfNotInitialized()
-		{
-			// Force NullReferenceException if dictionary is null by touching its Length.
-			// This way of checking has a nice property of requiring very little code
-			// and not having any conditions/branches.
-			// In a faulting scenario we are relying on hardware to generate the fault.
-			// And in the non-faulting scenario (most common) the check is virtually free since
-			// if we are going to do anything with the dictionary, we will need Length anyways
-			// so touching it, and potentially causing a cache miss, is not going to be an
-			// extra expense.
-			var unused = this.dictionary.Count;
-		}
-
-		/// <summary>
-		/// Throws an <see cref="InvalidOperationException"/> if the <see cref="dictionary"/> field is null, i.e. the
-		/// <see cref="IsDefault"/> property returns true.  The
-		/// <see cref="InvalidOperationException"/> message specifies that the operation cannot be performed
-		/// on a default instance of <see cref="FastImmutableDictionary{TKey, TValue}"/>.
-		///
-		/// This is intended for explicitly implemented interface method and property implementations.
-		/// </summary>
-		private void ThrowInvalidOperationIfNotInitialized()
-		{
-			if (this.IsDefault)
-			{
-				throw new InvalidOperationException(@"This operation cannot be performed on a default instance of FastImmutableDictionary<TKey, TValue>.  Consider initializing the dictionary, or checking the FastImmutableDictionary<TKey, TValue>.IsDefault property.");
-			}
-		}
 
 		public bool ContainsKey(TKey key)
 		{
