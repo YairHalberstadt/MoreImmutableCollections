@@ -10,7 +10,7 @@ As such I only tested the functionality I was actually intending to use!
 
 ## Nuget
 
-https://www.nuget.org/packages/MoreImmutableCollections/0.0.1-alpha
+https://www.nuget.org/packages/MoreImmutableCollections/0.0.3-alpha
 
 ```
 Install-Package MoreImmutableCollections -Version 0.0.1-alpha
